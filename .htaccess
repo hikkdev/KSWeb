@@ -1,0 +1,26 @@
+# Apache configuration (ignored by other servers)
+ErrorDocument 404 /404.html
+DirectoryIndex index.html
+
+# Force HTTPS and remove www
+RewriteEngine On
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteRule ^ https://keysquare.co%{REQUEST_URI} [L,R=301]
+
+# Serve /platform as /platform.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^([^.]+)$ $1.html [L]
+
+AddType application/manifest+json .webmanifest
+AddType image/svg+xml .svg
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType image/png "access plus 6 months"
+  ExpiresByType image/svg+xml "access plus 6 months"
+  ExpiresByType image/x-icon "access plus 1 year"
+</IfModule>
